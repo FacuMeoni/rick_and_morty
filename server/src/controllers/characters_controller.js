@@ -57,3 +57,18 @@ export const getCharacterByID = async(req, res) => {
     character
   })
 }
+
+export const getAllCharacters = async(req,res) => {
+    const characters = await characterModel.findAll();
+
+    return res.status(200).json({
+        characters: characters.map(character => {
+            return {
+                id: character.id,
+                name: character.name,
+                status:character.status,
+                image: character.image
+            }
+        })
+    })
+}
