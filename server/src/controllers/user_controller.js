@@ -23,8 +23,10 @@ export const registerUser = async(req, res) => {
     return res.status(201).json({
         success: true,
         message: 'User register successfully',
-        userId: newUser.id,
-        username: newUser.username
+        user : {
+            username: newUser.username, 
+            userId: newUser.id
+        }
     });
 }
 
@@ -35,7 +37,12 @@ export const loginUser = async(req, res) => {
 
     if(error)throw error;
 
-    const user = await userModel.findOne({ where: { username }});
+    const user = await userModel.findOne({ where: { username },
+        include: {
+            model: characterModel,
+            as: 'favorites',
+            through: { attributes: [] }
+        }});
     if(!user)throw new AuthorizationError("Wrong username or password.");
 
     const checkPassword = await bcrypt.compare(password, user.password);
@@ -44,8 +51,11 @@ export const loginUser = async(req, res) => {
     return res.status(200).json({ 
         success: true,
         message: 'User login successfully',
-        userId: user.id,
-        username
+        user: {
+            userId: user.id,
+            username: user.username,
+            favorites: user.favorites || []
+        }
     });
 }
 
