@@ -1,7 +1,7 @@
-import { authUser } from "../services/user_services";
+import { authUser } from "../../services/user_services";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "../redux/userSlice";
+import { setUser } from "../../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
 
@@ -15,6 +15,7 @@ function RegisterSection () {
         password: '',
         confirmPassword: ''
     })
+    
 
     function handleChange(event) {
         const {name, value} = event.target;
@@ -33,36 +34,33 @@ function RegisterSection () {
             return
         }
         
-       console.log(response.user);
+
        dispatch(setUser(response.user));
        navigate('/home');
        return 
     }
 
     return(
-        <form>
-            <h2>Register Section</h2>
+        <form onSubmit={handleSubmit}>
+            <h2> Register Section </h2>
             <input 
                 type="text"
                 name="username"
                 placeholder="Your username"
-                onChange={handleChange}/>
+                onChange={handleChange}/>    
             <input 
                 type="password"
                 name="password"
                 placeholder="Your password"
-                onChange={handleChange}
-            />
+                onChange={handleChange}/>
             <input 
                 type="password"
                 name="confirmPassword" 
                 placeholder="Confirm password"
-                onChange={handleChange}
-            />
-            <button onClick={handleSubmit}>
-                Register
-            </button>
-            { errors ? <span> { errors } </span> : null }
+                onChange={handleChange}/>
+            <button type="submit">
+                Register </button>
+            { errors && <span> { errors } </span> }
         </form>
     )
 }

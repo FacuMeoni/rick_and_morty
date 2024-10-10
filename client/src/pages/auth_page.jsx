@@ -1,10 +1,10 @@
-import RegisterSection from "../components/register";
-//import LoginSection from "../components/login";
+//import RegisterSection from "../components/authComponents/register";
+import LoginSection from "../components/authComponents/login";
 
 function AuthPage () {
     return(
         <section>
-            <RegisterSection/>
+            <LoginSection/>
         </section>
     )
 }
