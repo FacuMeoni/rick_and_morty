@@ -10,6 +10,19 @@ export const authUser = async(authMethod, credentials) => {
             user: data.user
         }
     } catch (error) {
-        return error.response.data;
+        if(error.response) {
+            return error.response.data;
+        }else if(error.request){
+            return {
+                success: false,
+                message: 'Network error, please try again later.'
+            }
+        }else {
+            console.log('Unexpected error:', error)
+            return {
+                sucess: false,
+                message: 'An unnexpected error ocurred. Please try again later.'
+            }
+        }
     }
 }
