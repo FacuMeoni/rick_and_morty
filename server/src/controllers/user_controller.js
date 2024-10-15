@@ -10,15 +10,15 @@ export const registerUser = async(req, res) => {
     const { data, error } = validateUser({ username, password, confirmPassword });
     if(error)throw error;
 
-    const userAlreadyExists = await userModel.findOne({ where: { username }});
+    const lowerCasedUsername = username.toLowerCase();
+    const userAlreadyExists = await userModel.findOne({ where: { username: lowerCasedUsername }});
     if(userAlreadyExists)throw new ConflictError('User already exists.');
-
 
     if(password !== confirmPassword) throw new ValidationError("Password and confirm password doesn't match.");
 
     const hashedPassword = await bcrypt.hash(password, 8);
     
-    const newUser = await userModel.create({username, password: hashedPassword});
+    const newUser = await userModel.create({username: lowerCasedUsername, password: hashedPassword});
 
     return res.status(201).json({
         success: true,
@@ -33,11 +33,11 @@ export const registerUser = async(req, res) => {
 export const loginUser = async(req, res) => {
     const { username, password } = req.body;
 
-    const { data, error } = partialValidateUser({ username, password });
-
+    const lowerCasedUsername = username.toLowerCase();
+    const { data, error } = partialValidateUser({ lowerCasedUsername, password });
     if(error)throw error;
 
-    const user = await userModel.findOne({ where: { username },
+    const user = await userModel.findOne({ where: { username: lowerCasedUsername },
         include: {
             model: characterModel,
             as: 'favorites',
