@@ -61,6 +61,8 @@ export const getCharacterByID = async(req, res) => {
 export const getAllCharacters = async(req,res) => {
     const characters = await characterModel.findAll();
 
+    if(!characters)throw NotFoundError("No characters found.")
+
     return res.status(200).json({
         characters: characters.map(character => {
             return {
