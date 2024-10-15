@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/userSlice";
 import { useNavigate } from "react-router-dom";
+import { validateCredentials } from "./validations";
+import { validateErrors } from "./errors";
 
 
 function RegisterSection () {
@@ -16,24 +18,24 @@ function RegisterSection () {
         confirmPassword: ''
     })
     
-
     function handleChange(event) {
         const {name, value} = event.target;
         setCredentials({
             ...credentials,
             [name]: value
         });
+
+        setErrors('');
     };
 
     async function handleSubmit (event) {
         event.preventDefault();
-        const response = await authUser('register', credentials);
-
-        if(!response.success){
-            setErrors(response.message);
-            return
-        }
         
+        const credentialsAreValidate = validateCredentials(credentials);
+        if(credentialsAreValidate.error)return setErrors(credentialsAreValidate.message);
+        
+        const response = await authUser('register', credentials);
+        if(!response.success)return setErrors(validateErrors(response));
 
        dispatch(setUser(response.user));
        navigate('/home');
@@ -58,9 +60,9 @@ function RegisterSection () {
                 name="confirmPassword" 
                 placeholder="Confirm password"
                 onChange={handleChange}/>
-            <button type="submit">
+            <button type='submit' disabled={!credentials.username || !credentials.password || !credentials.confirmPassword || errors }>
                 Register </button>
-            { errors && <span> { errors } </span> }
+            { errors ? <span> { errors } </span> : null }
         </form>
     )
 }
