@@ -23,7 +23,7 @@ export class ConflictError extends AppError {
 }
 
 export class AuthorizationError extends AppError {
-    name = 'Authorization error'
+    name = 'Authorization Error'
 
     constructor(message) {
         super(message, 401)
