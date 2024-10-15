@@ -3,9 +3,7 @@ config();
 const { APIURL } = process.env;
 import { characterModel } from "../database/models.js";
 import axios from 'axios';
-import { tryCatch } from '../utils/try_catch.js';
-import { ValidationError } from 'sequelize';
-import { NotFoundError } from '../utils/errors.js';
+import { NotFoundError, ValidationError } from '../utils/errors.js';
 
 const getCharactersOnAPI = async() => {
 

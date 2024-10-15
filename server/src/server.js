@@ -32,7 +32,7 @@ app.use('/user', userRouter);
 app.use('/characters', characterRouter);
 app.use((req, res, next) => {
     res.status(404).json({
-        sucess: false,
+        success: false,
         message: 'Route not found'
     })
 });
