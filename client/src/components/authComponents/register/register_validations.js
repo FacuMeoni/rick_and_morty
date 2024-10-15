@@ -1,8 +1,8 @@
-export function validateCredentials (credentials) {
+export default function registerValidate (credentials) {
 
     const { username, password, confirmPassword } = credentials;
 
-    if(!username && !confirmPassword && !password) return { error: true, message: "Please complete all information." }
+    if(!username && !password || !confirmPassword) return { error: true, message: "Please complete all information." }
 
     if(!username) return { error: true, message: 'Username is required' }
     if(!password) return { error: true, message: 'Password is required' }

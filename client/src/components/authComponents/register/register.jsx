@@ -1,10 +1,10 @@
-import { authUser } from "../../services/user_services";
+import { authUser } from "../../../services/user_services";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../redux/userSlice";
+import { setUser } from "../../../redux/userSlice";
 import { useNavigate } from "react-router-dom";
-import { validateCredentials } from "./validations";
-import { validateErrors } from "./errors";
+import registerValidate from "./register_validations";
+import { validateErrors }  from "../errors";
 
 
 function RegisterSection () {
@@ -31,7 +31,7 @@ function RegisterSection () {
     async function handleSubmit (event) {
         event.preventDefault();
         
-        const credentialsAreValidate = validateCredentials(credentials);
+        const credentialsAreValidate = registerValidate(credentials);
         if(credentialsAreValidate.error)return setErrors(credentialsAreValidate.message);
         
         const response = await authUser('register', credentials);

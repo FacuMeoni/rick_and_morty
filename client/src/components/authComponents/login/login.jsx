@@ -1,8 +1,10 @@
-import { authUser } from "../../services/user_services";
+import { authUser } from "../../../services/user_services";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../redux/userSlice";
+import { setUser } from "../../../redux/userSlice";
 import { useNavigate } from "react-router-dom";
+import loginValidations from "./login_validations";
+import { validateErrors } from "../errors";
 
 
 function LoginSection () {
@@ -22,23 +24,23 @@ function LoginSection () {
             ...credentials,
             [name]: value
         });
+
+        setErrors('');
     };
 
     async function handleSubmit (event) {
         event.preventDefault();
-        const response = await authUser('login', credentials);
-
-        if(!response.success){
-            setErrors(response.message);
-            return
-        }
         
+        const credentialsAreValidate = loginValidations(credentials);
+        if(credentialsAreValidate.error)return setErrors(credentialsAreValidate.message);
+        
+        const response = await authUser('login', credentials);
+        if(!response.success)return setErrors(validateErrors(response));
 
        dispatch(setUser(response.user));
        navigate('/home');
        return 
     }
-
     return(
         <form onSubmit={handleSubmit}>
             <h2> Login Section </h2>
@@ -52,7 +54,7 @@ function LoginSection () {
                 name="password"
                 placeholder="Your password"
                 onChange={handleChange}/>
-            <button type="submit">
+            <button type="submit" disabled={errors || !credentials.username || !credentials.password}>
                 Login </button>
             { errors && <span> { errors } </span> }
         </form>
